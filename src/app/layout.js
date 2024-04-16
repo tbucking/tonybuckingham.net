@@ -1,9 +1,5 @@
-import { Inter } from "next/font/google";
 import Script from "next/script";
-
-import "./globals.css";
-
-const inter = Inter({ subsets: ["latin"] });
+import { Providers } from './providers';
 
 export const metadata = {
   title: "Tony Buckingham",
@@ -25,7 +21,7 @@ export default function RootLayout({ children }) {
           `}
         </Script>
       </head>
-      <body className={inter.className}>{children}</body>
+      <body><Providers>{children}</Providers></body>
     </html>
   );
 }
