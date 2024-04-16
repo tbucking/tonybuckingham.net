@@ -1,16 +1,19 @@
-import Script from "next/script";
+import Script from 'next/script';
 import { Providers } from './providers';
 
 export const metadata = {
-  title: "Tony Buckingham",
-  description: "About Tony Buckingham",
+  title: 'Tony Buckingham',
+  description: 'About Tony Buckingham'
 };
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <head>
-        <Script async src="https://www.googletagmanager.com/gtag/js?id=G-NVP1LXWH8X" />
+        <Script
+          async
+          src="https://www.googletagmanager.com/gtag/js?id=G-NVP1LXWH8X"
+        />
         <Script id="google-analytics">
           {`
           window.dataLayer = window.dataLayer || [];
@@ -21,7 +24,9 @@ export default function RootLayout({ children }) {
           `}
         </Script>
       </head>
-      <body><Providers>{children}</Providers></body>
+      <body>
+        <Providers>{children}</Providers>
+      </body>
     </html>
   );
 }

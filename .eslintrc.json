@@ -1,3 +1,95 @@
 {
-  "extends": "next/core-web-vitals"
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "extends": [
+    "next/core-web-vitals",
+    "eslint:recommended",
+    "plugin:prettier/recommended",
+    "plugin:jsx-a11y/recommended",
+    "prettier"
+  ],
+  "plugins": ["prettier", "jsx-a11y"],
+  "rules": {
+    "prettier/prettier": ["warn"],
+    "func-names": ["off"],
+    "no-param-reassign": ["off"],
+    "radix": ["error", "as-needed"],
+    "consistent-return": "off",
+    "no-useless-escape": "off",
+    "no-use-before-define": [
+      "warn",
+      {
+        "functions": false
+      }
+    ],
+    "object-curly-spacing": ["warn", "always"],
+    "max-len": "off",
+    "no-plusplus": "off",
+    "global-require": "off",
+    "indent": [
+      "warn",
+      2,
+      {
+        "SwitchCase": 1
+      }
+    ],
+    "class-methods-use-this": "off",
+    "no-unused-vars": [
+      "warn",
+      {
+        "varsIgnorePattern": "React"
+      }
+    ],
+    "no-console": "warn",
+    "import/no-extraneous-dependencies": "off",
+    "keyword-spacing": [
+      "warn",
+      {
+        "before": true,
+        "after": true
+      }
+    ],
+    "space-infix-ops": "warn",
+    "no-else-return": "off",
+    "import/prefer-default-export": "off",
+    "import/no-unresolved": "off",
+    "import/newline-after-import": "warn",
+    "lines-between-class-members": "off",
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["hrefLeft", "hrefRight"],
+        "aspects": ["invalidHref", "preferButton"]
+      }
+    ],
+    "jsx-a11y/alt-text": [
+      "error",
+      {
+        "elements": ["img", "object", "area", "input[type=\"image\"]"],
+        "img": ["Image"],
+        "object": ["Object"],
+        "area": ["Area"],
+        "input[type=\"image\"]": ["InputImage"]
+      }
+    ],
+    "jsx-a11y/control-has-associated-label": [
+      "error",
+      {
+        "labelAttributes": ["aria-label", "aria-labelledby"],
+        "controlComponents": ["button", "IconButton"],
+        "ignoreElements": [
+          "option"
+        ],
+        "depth": 3
+      }
+    ],
+    "spaced-comment": ["warn", "always", {
+      "block": {
+        "balanced": true
+      }
+    }]
+  }
 }

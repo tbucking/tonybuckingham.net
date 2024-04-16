@@ -1,8 +1,8 @@
 'use client';
 
-import { ThemeUIProvider } from "theme-ui";
+import { ThemeUIProvider } from 'theme-ui';
 import theme from './theme';
 
-export function Providers ({children}) {
-  return <ThemeUIProvider theme={theme}>{children}</ThemeUIProvider>
+export function Providers({ children }) {
+  return <ThemeUIProvider theme={theme}>{children}</ThemeUIProvider>;
 }
