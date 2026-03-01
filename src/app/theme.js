@@ -7,7 +7,7 @@ export default {
   },
   colors: {
     text: '#000',
-    background: '#111',
+    background: '#fff',
     primary: '#33e'
   }
 };

@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
           `}
         </Script>
       </head>
-      <body>
+      <body style={{ backgroundColor: 'white' }}>
         <Providers>{children}</Providers>
       </body>
     </html>
