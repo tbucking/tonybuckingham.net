@@ -19,3 +19,4 @@
 - Use Supabase client libraries for database interactions
 - Follow Supabase best practices for authentication and data management
 - Ensure secure handling of API keys and sensitive information
+- Regularly review and update dependencies to maintain security and performance
