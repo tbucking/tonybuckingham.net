@@ -14,3 +14,8 @@
 - Use meaningful variable and function names that clearly describe their purpose
 - Include helpful comments for complex logic
 - Add error handling for user inputs and API calls
+
+## Supabase
+- Use Supabase client libraries for database interactions
+- Follow Supabase best practices for authentication and data management
+- Ensure secure handling of API keys and sensitive information

@@ -9,7 +9,10 @@ export default function Home() {
       sx={{
         justifyContent: 'center',
         alignItems: 'center',
-        minHeight: '100vh'
+        minHeight: '100vh',
+        flexDirection: 'column',
+        gap: 4,
+        p: 4
       }}
     >
       <Image

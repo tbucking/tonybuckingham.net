@@ -6,8 +6,22 @@ export default {
     monospace: 'Menlo, monospace'
   },
   colors: {
-    text: '#000',
-    background: '#000',
-    primary: '#33e'
+    text: '#f8fafc',
+    background: '#0f172a',
+    primary: '#38bdf8',
+    error: '#f87171',
+    muted: '#1e293b'
+  },
+  buttons: {
+    primary: {
+      bg: 'primary',
+      color: '#0f172a',
+      cursor: 'pointer'
+    },
+    secondary: {
+      bg: 'muted',
+      color: 'text',
+      cursor: 'pointer'
+    }
   }
 };

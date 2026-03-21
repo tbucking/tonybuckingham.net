@@ -1,5 +1,32 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Supabase Authentication Setup
+
+This app includes email/password authentication via Supabase.
+
+1. Create your local environment file and add your project values:
+
+```bash
+cp .env.example .env.local
+```
+
+2. Set these variables in `.env.local`:
+
+```bash
+NEXT_PUBLIC_SUPABASE_URL=your-supabase-project-url
+NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
+```
+
+3. If you are using local Supabase CLI (`supabase start`), use your local API URL and anon key from the CLI output.
+
+4. Run the app:
+
+```bash
+npm run dev
+```
+
+The `/admin` path is protected with Supabase auth. When not signed in, `/admin` shows a sign in/sign up form and only reveals admin content after successful authentication.
+
 ## Getting Started
 
 First, run the development server:
