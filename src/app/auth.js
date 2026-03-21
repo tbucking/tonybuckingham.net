@@ -221,9 +221,6 @@ export function Auth({ children }) {
           <Button onClick={handleSignIn} disabled={isLoading}>
             {isLoading ? 'Please wait...' : 'Sign in'}
           </Button>
-          <Button variant="secondary" onClick={handleSignUp} disabled={isLoading}>
-            {isLoading ? 'Please wait...' : 'Sign up'}
-          </Button>
         </Flex>
       </Flex>
 
