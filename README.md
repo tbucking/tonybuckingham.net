@@ -1,5 +1,9 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Contributor Note
+
+Before making any Next.js code changes, read the relevant docs in `node_modules/next/dist/docs/` as required by `AGENTS.md`.
+
 ## Supabase Authentication Setup
 
 This app includes email/password authentication via Supabase.
