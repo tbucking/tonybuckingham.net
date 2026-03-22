@@ -29,7 +29,7 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-supabase-anon-key
 npm run dev
 ```
 
-The `/admin` path is protected with Supabase auth. When not signed in, `/admin` shows a sign in/sign up form and only reveals admin content after successful authentication.
+The `/admin` path is protected using Next.js `proxy.js` + Supabase SSR session checks. Unauthenticated requests to `/admin` are redirected to `/login`.
 
 ## Getting Started
 

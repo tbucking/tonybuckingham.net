@@ -1,3 +1,6 @@
+# Supabase Auth
+
+Handle authentication using the approach described in https://supabase.com/docs/guides/auth/server-side/creating-a-client
 <!-- BEGIN:nextjs-agent-rules -->
  
 # Next.js: ALWAYS read docs before coding

@@ -1,10 +1,14 @@
 'use client';
 
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Box, Button, Flex, Input, Label, Text } from 'theme-ui';
-import { isSupabaseConfigured, supabase } from '../lib/supabaseClient';
+import { createClient } from '../lib/supabase/client';
 
-export function Auth({ children }) {
+export function Auth({ children, redirectTo = null }) {
+  const router = useRouter();
+  const [supabase, setSupabase] = useState(null);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [session, setSession] = useState(null);
@@ -12,6 +16,17 @@ export function Auth({ children }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckingSession, setIsCheckingSession] = useState(true);
+  const isSupabaseConfigured = Boolean(
+    process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+
+  useEffect(() => {
+    if (!isSupabaseConfigured) {
+      return;
+    }
+
+    setSupabase(createClient());
+  }, [isSupabaseConfigured]);
 
   useEffect(() => {
     if (!isSupabaseConfigured || !supabase) {
@@ -52,7 +67,15 @@ export function Auth({ children }) {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, []);
+  }, [isSupabaseConfigured, supabase]);
+
+  useEffect(() => {
+    if (!session || !redirectTo) {
+      return;
+    }
+
+    router.replace(redirectTo);
+  }, [redirectTo, router, session]);
 
   const resetMessages = () => {
     setStatusMessage('');
@@ -60,26 +83,6 @@ export function Auth({ children }) {
   };
 
   const userEmail = session?.user?.email ?? '';
-
-  const handleSignUp = async () => {
-    if (!supabase) {
-      return;
-    }
-
-    resetMessages();
-    setIsLoading(true);
-
-    const { error } = await supabase.auth.signUp({ email, password });
-
-    if (error) {
-      setErrorMessage(error.message);
-      setIsLoading(false);
-      return;
-    }
-
-    setStatusMessage('Account created. You can now sign in.');
-    setIsLoading(false);
-  };
 
   const handleSignIn = async () => {
     if (!supabase) {
@@ -158,9 +161,14 @@ export function Auth({ children }) {
           <Text as="p" sx={{ mb: 3 }}>
             Signed in as <strong>{userEmail}</strong>
           </Text>
-          <Button onClick={handleSignOut} disabled={isLoading}>
-            {isLoading ? 'Signing out...' : 'Sign out'}
-          </Button>
+          <Flex sx={{ gap: 2, flexWrap: 'wrap', alignItems: 'center' }}>
+            <Button as={Link} href="/admin">
+              Go to admin
+            </Button>
+            <Button onClick={handleSignOut} disabled={isLoading}>
+              {isLoading ? 'Signing out...' : 'Sign out'}
+            </Button>
+          </Flex>
           {statusMessage && (
             <Text as="p" sx={{ mt: 3, color: 'primary' }}>
               {statusMessage}
