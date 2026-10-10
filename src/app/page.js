@@ -17,6 +17,7 @@ export default function Home() {
     >
       <Image
         src="/img/bear-01.png"
+        alt="Bear"
         priority
         width={0}
         height={0}
