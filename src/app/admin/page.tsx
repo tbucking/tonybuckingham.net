@@ -3,14 +3,15 @@ import { createClient } from '@/lib/supabase/server';
 import {
   fetchDashboard,
   fetchDevices,
-  fetchTimeBounds
+  fetchTimeBounds,
+  type DashboardSummary
 } from '@/lib/activity-queries';
-import AdminDashboard from './admin-dashboard';
+import AdminDashboard, { type AdminInitialData } from './admin-dashboard';
 
 // Always fetch fresh data for this authenticated admin page.
 export const dynamic = 'force-dynamic';
 
-const EMPTY_SUMMARY = {
+const EMPTY_SUMMARY: DashboardSummary = {
   bucketCount: 0,
   totalImpulses: 0,
   totalImpulseSum: 0,
@@ -36,7 +37,7 @@ export default async function AdminPage() {
     fetchTimeBounds(supabase)
   ]);
 
-  const initialData = {
+  const initialData: AdminInitialData = {
     summary: dashboardResult.summary ?? EMPTY_SUMMARY,
     timeline: dashboardResult.timeline ?? [],
     recent: dashboardResult.recent ?? [],

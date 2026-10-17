@@ -2,8 +2,10 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Button, Flex, Text } from 'theme-ui';
 import { createClient } from '@/lib/supabase/client';
+import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Button } from '@/components/ui/button';
+import { LogOut } from 'lucide-react';
 
 export default function SignOutButton() {
   const router = useRouter();
@@ -33,15 +35,16 @@ export default function SignOutButton() {
   };
 
   return (
-    <Flex sx={{ alignItems: 'center', gap: 3 }}>
-      <Button onClick={handleSignOut} disabled={isSigningOut}>
+    <div className="flex items-center gap-3">
+      <Button variant="outline" onClick={handleSignOut} disabled={isSigningOut}>
+        <LogOut />
         {isSigningOut ? 'Signing out...' : 'Log out'}
       </Button>
       {errorMessage && (
-        <Text as="p" sx={{ color: 'error' }}>
-          {errorMessage}
-        </Text>
+        <Alert variant="destructive" className="py-2">
+          <AlertDescription>{errorMessage}</AlertDescription>
+        </Alert>
       )}
-    </Flex>
+    </div>
   );
 }

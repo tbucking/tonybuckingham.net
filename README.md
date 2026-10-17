@@ -1,8 +1,18 @@
 This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
 
+## Frontend Stack
+
+- **TypeScript** — the whole `src/` tree is `.ts`/`.tsx` with `strict: true`. Run `npm run typecheck` to check types.
+- **shadcn/ui** — components are vendored into `src/components/ui` via the CLI (`npx shadcn@latest add <component>`). They are project code, so edit them freely.
+- **Tailwind CSS v4** — configured through `postcss.config.mjs` and `src/app/globals.css`; there is no `tailwind.config.js`.
+- **Design tokens** — the palette lives as CSS variables in `src/app/globals.css` (`:root` and `.dark`). Change colours there rather than in components.
+- **Dark mode** — `next-themes` with a manual toggle only (`enableSystem` is off). The `dark` class is applied to `<html>`.
+
 ## Contributor Note
 
 Before making any Next.js code changes, read the relevant docs in `node_modules/next/dist/docs/` as required by `AGENTS.md`.
+
+Run `npm run typecheck` and `npm run build` before opening a pull request.
 
 ## Supabase Authentication Setup
 
@@ -54,7 +64,7 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.js`. The page auto-updates as you edit the file.
+You can start editing the page by modifying `src/app/page.tsx`. The page auto-updates as you edit the file.
 
 ## Learn More
 

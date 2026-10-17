@@ -1,49 +1,43 @@
 import { createServerClient } from '@supabase/ssr';
-import { NextResponse } from 'next/server';
+import { NextResponse, type NextRequest } from 'next/server';
+import { getSupabaseEnv } from './env';
 
 const ADMIN_PATH = '/admin';
 const LOGIN_PATH = '/login';
 
-function hasSupabaseEnv() {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
-}
-
-export async function updateSession(request) {
-  if (!hasSupabaseEnv()) {
+export async function updateSession(request: NextRequest) {
+  const env = getSupabaseEnv();
+  if (!env) {
     return NextResponse.next({ request });
   }
 
   let response = NextResponse.next({ request });
 
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) => {
-            request.cookies.set(name, value);
-          });
+  const supabase = createServerClient(env.url, env.key, {
+    cookies: {
+      getAll() {
+        return request.cookies.getAll();
+      },
+      setAll(cookiesToSet) {
+        cookiesToSet.forEach(({ name, value }) => {
+          request.cookies.set(name, value);
+        });
 
-          response = NextResponse.next({ request });
+        response = NextResponse.next({ request });
 
-          cookiesToSet.forEach(({ name, value, options }) => {
-            response.cookies.set(name, value, options);
-          });
-        }
+        cookiesToSet.forEach(({ name, value, options }) => {
+          response.cookies.set(name, value, options);
+        });
       }
     }
-  );
+  });
 
-  let claims = null;
-  let error = null;
+  let claims: Record<string, unknown> | null = null;
+  let error: unknown = null;
 
   try {
     const { data, error: claimsError } = await supabase.auth.getClaims();
-    claims = data?.claims ?? null;
+    claims = (data?.claims as Record<string, unknown> | undefined) ?? null;
     error = claimsError;
   } catch (unexpectedError) {
     error = unexpectedError;

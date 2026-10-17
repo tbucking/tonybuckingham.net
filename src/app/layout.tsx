@@ -1,15 +1,21 @@
+import type { Metadata } from 'next';
 import Script from 'next/script';
 import { Providers } from './providers';
+import './globals.css';
 
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Tony Buckingham',
   description: 'About Tony Buckingham'
 };
 
-export default function RootLayout({ children }) {
+export default function RootLayout({
+  children
+}: {
+  children: React.ReactNode;
+}) {
   return (
-    // suppressHydrationWarning: Theme UI's InitializeColorMode adds a
-    // color-mode class to <html> on the client that the server didn't render.
+    // next-themes writes the color mode class to <html> on the client, which
+    // the server render does not include.
     <html lang="en" suppressHydrationWarning>
       <head>
         <Script

@@ -18,9 +18,11 @@ This repo shares its hosted Supabase project (ref `jdewkdjgbghtvzwsmpuw`) with t
 - For non-trivial work, branch from `main` (`feature/<name>`, `fix/<name>`, `chore/<name>`), merge to `main`, then fast-forward `release/v-1.0` and push to deploy.
 - Small doc/config cleanups may be committed directly to `main`, then fast-forward `release/v-1.0` and push.
 <!-- BEGIN:nextjs-agent-rules -->
- 
-# Next.js: ALWAYS read docs before coding
- 
-Before any Next.js work, find and read the relevant doc in `node_modules/next/dist/docs/`. Your training data is outdated — the docs are the source of truth.
- 
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
 <!-- END:nextjs-agent-rules -->

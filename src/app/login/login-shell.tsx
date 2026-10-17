@@ -3,7 +3,11 @@
 import { useEffect, useState } from 'react';
 import LoginClient from './login-client';
 
-export default function LoginShell({ redirectTo }) {
+interface LoginShellProps {
+  redirectTo: string;
+}
+
+export default function LoginShell({ redirectTo }: LoginShellProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
