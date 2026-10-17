@@ -10,6 +10,13 @@ This repo shares its hosted Supabase project (ref `jdewkdjgbghtvzwsmpuw`) with t
 - This repo has no `supabase/migrations/` directory; all migrations live in the internetbutton repo.
 - NEVER run `supabase db push` or `supabase db reset` against the hosted project from this repo.
 - Inspect the remote schema read-only with `supabase db query --linked`.
+
+# Branching & Deployment
+
+- Production is served from the `release/v-1.0` branch; Netlify builds on every push to it.
+- `main` is the integration branch. Keep `main` and `release/v-1.0` in sync after changes.
+- For non-trivial work, branch from `main` (`feature/<name>`, `fix/<name>`, `chore/<name>`), merge to `main`, then fast-forward `release/v-1.0` and push to deploy.
+- Small doc/config cleanups may be committed directly to `main`, then fast-forward `release/v-1.0` and push.
 <!-- BEGIN:nextjs-agent-rules -->
  
 # Next.js: ALWAYS read docs before coding

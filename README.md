@@ -40,6 +40,10 @@ This site shares its hosted Supabase project (ref `jdewkdjgbghtvzwsmpuw`) with t
 - Do **not** run `supabase db push` or `supabase db reset` against the hosted project from this repository.
 - To inspect the remote database read-only, use `supabase db query --linked`.
 
+## Deployment
+
+Production is served from the `release/v-1.0` branch via Netlify; pushing to that branch triggers a production build.
+
 ## Getting Started
 
 First, run the development server:
