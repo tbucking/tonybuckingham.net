@@ -66,6 +66,7 @@ export default function ActivityFilters({ devices, value, onChange }: ActivityFi
           <Field className="w-full sm:w-[220px]">
             <FieldLabel htmlFor="device-filter">Device</FieldLabel>
             <Select
+              name="device"
               value={deviceId || ALL_DEVICES}
               onValueChange={handleDeviceChange}
             >

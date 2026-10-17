@@ -2,6 +2,10 @@ import type { Metadata } from 'next';
 import Script from 'next/script';
 import { Providers } from './providers';
 import './globals.css';
+import { Inter } from 'next/font/google';
+import { cn } from '@/lib/utils';
+
+const inter = Inter({ subsets: ['latin'], variable: '--font-sans' });
 
 export const metadata: Metadata = {
   title: 'Tony Buckingham',
@@ -16,7 +20,11 @@ export default function RootLayout({
   return (
     // next-themes writes the color mode class to <html> on the client, which
     // the server render does not include.
-    <html lang="en" suppressHydrationWarning>
+    <html
+      lang="en"
+      suppressHydrationWarning
+      className={cn('font-sans', inter.variable)}
+    >
       <head>
         <Script
           async
