@@ -8,7 +8,9 @@ export const metadata = {
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
+    // suppressHydrationWarning: Theme UI's InitializeColorMode adds a
+    // color-mode class to <html> on the client that the server didn't render.
+    <html lang="en" suppressHydrationWarning>
       <head>
         <Script
           async

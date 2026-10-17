@@ -2,6 +2,10 @@
 
 import { Box, Grid, Text } from 'theme-ui';
 
+// Deterministic grouping so server and client render identical thousands
+// separators regardless of runtime locale.
+const numberFormat = new Intl.NumberFormat('en-US');
+
 function StatCard({ label, value }) {
   return (
     <Box
@@ -27,7 +31,7 @@ function StatCard({ label, value }) {
         {label}
       </Text>
       <Text as="p" sx={{ fontSize: 4, fontWeight: 'bold', color: 'text' }}>
-        {value.toLocaleString()}
+        {numberFormat.format(value)}
       </Text>
     </Box>
   );

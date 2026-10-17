@@ -1,11 +1,7 @@
 'use client';
 
 import { Box, Text } from 'theme-ui';
-
-function formatTimestamp(value) {
-  if (!value) return '—';
-  return new Date(value).toLocaleString();
-}
+import { useMounted } from '@/lib/use-mounted';
 
 const HEADERS = [
   'Device',
@@ -25,7 +21,20 @@ const cellStyle = {
   whiteSpace: 'nowrap'
 };
 
+// Deterministic grouping so server and client render identical thousands
+// separators regardless of runtime locale.
+const numberFormat = new Intl.NumberFormat('en-US');
+
 export default function RecentActivityTable({ recent }) {
+  const mounted = useMounted();
+
+  // Locale/timezone-dependent, so format only after hydration to keep the
+  // server-rendered HTML identical to the client's first paint.
+  const formatTimestamp = (value) => {
+    if (!value || !mounted) return '—';
+    return new Date(value).toLocaleString();
+  };
+
   if (!recent.length) {
     return <Text as="p">No activity yet.</Text>;
   }
@@ -92,7 +101,7 @@ export default function RecentActivityTable({ recent }) {
                 <Box as="td" sx={cellStyle}>{formatTimestamp(row.received_at)}</Box>
                 <Box as="td" sx={cellStyle}>{row.impulses}</Box>
                 <Box as="td" sx={cellStyle}>
-                  {Number(row.impulse_sum ?? 0).toLocaleString()}
+                  {numberFormat.format(Number(row.impulse_sum ?? 0))}
                 </Box>
                 <Box as="td" sx={cellStyle}>{row.max_delta ?? '—'}</Box>
                 <Box as="td" sx={cellStyle}>{row.max_dz ?? '—'}</Box>

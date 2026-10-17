@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Box, Flex, Text } from 'theme-ui';
 import { createClient } from '@/lib/supabase/client';
+import { useMounted } from '@/lib/use-mounted';
 import {
   fetchDashboard,
   fetchDevices,
@@ -28,6 +29,7 @@ function toQueryFilters(filters) {
 
 export default function AdminDashboard({ initialData }) {
   const supabase = useMemo(() => createClient(), []);
+  const mounted = useMounted();
 
   const [filters, setFilters] = useState(EMPTY_FILTERS);
   const filtersRef = useRef(EMPTY_FILTERS);
@@ -163,8 +165,9 @@ export default function AdminDashboard({ initialData }) {
 
       {bounds.from && bounds.to && (
         <Text as="p" sx={{ fontSize: 1, color: 'text' }}>
-          Data from {new Date(bounds.from).toLocaleString()} to{' '}
-          {new Date(bounds.to).toLocaleString()}
+          {mounted
+            ? `Data from ${new Date(bounds.from).toLocaleString()} to ${new Date(bounds.to).toLocaleString()}`
+            : 'Data range loading…'}
         </Text>
       )}
 

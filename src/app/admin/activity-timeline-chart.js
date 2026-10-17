@@ -10,6 +10,7 @@ import {
   YAxis
 } from 'recharts';
 import { Box, Text, useThemeUI } from 'theme-ui';
+import { useMounted } from '@/lib/use-mounted';
 
 // recharts sets SVG presentation attributes, which do not resolve CSS custom
 // properties, so map the active color mode to concrete values that mirror the
@@ -30,11 +31,18 @@ const CHART_COLORS = {
 };
 
 export default function ActivityTimelineChart({ timeline }) {
+  const mounted = useMounted();
   const { colorMode } = useThemeUI();
   const colors = CHART_COLORS[colorMode] ?? CHART_COLORS.light;
 
   if (!timeline.length) {
     return <Text as="p">No activity to chart yet.</Text>;
+  }
+
+  // The chart renders SVG ticks and tooltip labels that are locale/timezone-
+  // dependent, so render it only after hydration to avoid an SSR mismatch.
+  if (!mounted) {
+    return <Box sx={{ width: '100%', height: 320 }} />;
   }
 
   const data = timeline.map((point) => ({
@@ -77,6 +85,7 @@ export default function ActivityTimelineChart({ timeline }) {
             tick={{ fill: colors.axis, fontSize: 11 }}
           />
           <Tooltip
+            labelFormatter={(value) => new Date(value).toLocaleString()}
             contentStyle={{
               background: colors.tooltipBg,
               border: `1px solid ${colors.grid}`,
