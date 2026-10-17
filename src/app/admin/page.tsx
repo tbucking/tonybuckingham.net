@@ -4,8 +4,11 @@ import {
   fetchDashboard,
   fetchDevices,
   fetchTimeBounds,
+  toQueryFilters,
+  type ActivityFilters,
   type DashboardSummary
 } from '@/lib/activity-queries';
+import { defaultDateRange } from '@/lib/datetime';
 import AdminDashboard, { type AdminInitialData } from './admin-dashboard';
 
 // Always fetch fresh data for this authenticated admin page.
@@ -31,8 +34,12 @@ export default async function AdminPage() {
     redirect('/login');
   }
 
+  // Open on the last 24 hours, computed per request so the server render and
+  // the client's first paint agree on the same filter values.
+  const initialFilters: ActivityFilters = defaultDateRange();
+
   const [dashboardResult, devicesResult, boundsResult] = await Promise.all([
-    fetchDashboard(supabase),
+    fetchDashboard(supabase, toQueryFilters(initialFilters)),
     fetchDevices(supabase),
     fetchTimeBounds(supabase)
   ]);
@@ -45,5 +52,5 @@ export default async function AdminPage() {
     bounds: boundsResult.bounds ?? { from: null, to: null }
   };
 
-  return <AdminDashboard initialData={initialData} />;
+  return <AdminDashboard initialData={initialData} initialFilters={initialFilters} />;
 }

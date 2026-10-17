@@ -12,7 +12,8 @@ import {
   type DashboardData,
   type DashboardSummary,
   type TimelinePoint,
-  type TimeBounds
+  type TimeBounds,
+  toQueryFilters
 } from '@/lib/activity-queries';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
@@ -25,15 +26,6 @@ import SummaryCards from './summary-cards';
 
 const EMPTY_FILTERS: Filters = { deviceId: '', from: '', to: '' };
 
-// datetime-local inputs yield "YYYY-MM-DDTHH:mm"; convert to a full timestamp.
-function toQueryFilters(filters: Filters): Filters {
-  return {
-    deviceId: filters.deviceId || undefined,
-    from: filters.from ? new Date(filters.from).toISOString() : undefined,
-    to: filters.to ? new Date(filters.to).toISOString() : undefined
-  };
-}
-
 export interface AdminInitialData {
   summary: DashboardSummary;
   timeline: TimelinePoint[];
@@ -44,14 +36,18 @@ export interface AdminInitialData {
 
 interface AdminDashboardProps {
   initialData: AdminInitialData;
+  initialFilters?: Filters;
 }
 
-export default function AdminDashboard({ initialData }: AdminDashboardProps) {
+export default function AdminDashboard({
+  initialData,
+  initialFilters = EMPTY_FILTERS
+}: AdminDashboardProps) {
   const supabase = useMemo(() => createClient(), []);
   const mounted = useMounted();
 
-  const [filters, setFilters] = useState<Filters>(EMPTY_FILTERS);
-  const filtersRef = useRef<Filters>(EMPTY_FILTERS);
+  const [filters, setFilters] = useState<Filters>(initialFilters);
+  const filtersRef = useRef<Filters>(initialFilters);
 
   const [data, setData] = useState<DashboardData>({
     summary: initialData.summary,

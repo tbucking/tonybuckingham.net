@@ -52,6 +52,16 @@ export interface QueryError {
   message: string;
 }
 
+// datetime-local inputs yield "YYYY-MM-DDTHH:mm"; convert to full timestamps
+// for the PostgREST comparison operators.
+export function toQueryFilters(filters: ActivityFilters): ActivityFilters {
+  return {
+    deviceId: filters.deviceId || undefined,
+    from: filters.from ? new Date(filters.from).toISOString() : undefined,
+    to: filters.to ? new Date(filters.to).toISOString() : undefined
+  };
+}
+
 // Only `from` is needed here, which keeps the module usable from both the
 // server and browser clients without pinning their concrete generic arguments.
 type ActivityClient = Pick<SupabaseClient, 'from'>;
