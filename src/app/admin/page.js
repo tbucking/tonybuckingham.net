@@ -1,65 +1,48 @@
-'use client';
+import { redirect } from 'next/navigation';
+import { createClient } from '@/lib/supabase/server';
+import {
+  fetchDashboard,
+  fetchDevices,
+  fetchTimeBounds
+} from '@/lib/activity-queries';
+import AdminDashboard from './admin-dashboard';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Box, Button, Flex, Text } from 'theme-ui';
-import { createClient } from '@/lib/supabase/client';
+// Always fetch fresh data for this authenticated admin page.
+export const dynamic = 'force-dynamic';
 
-export default function AdminPage() {
-	const router = useRouter();
-	const [isSigningOut, setIsSigningOut] = useState(false);
-	const [errorMessage, setErrorMessage] = useState('');
+const EMPTY_SUMMARY = {
+  bucketCount: 0,
+  totalImpulses: 0,
+  totalImpulseSum: 0,
+  deviceCount: 0
+};
 
-	const handleSignOut = async () => {
-		setErrorMessage('');
-		setIsSigningOut(true);
+export default async function AdminPage() {
+  const supabase = await createClient();
 
-		try {
-			const supabase = createClient();
-			const { error } = await supabase.auth.signOut();
+  // The SSR client uses lazy session init: load (and verify) the session first
+  // so subsequent database queries carry the user's `authenticated` access token.
+  const {
+    data: { user }
+  } = await supabase.auth.getUser();
 
-			if (error) {
-				setErrorMessage(error.message);
-				setIsSigningOut(false);
-				return;
-			}
+  if (!user) {
+    redirect('/login');
+  }
 
-			router.replace('/login');
-			router.refresh();
-		} catch {
-			setErrorMessage('Sign out failed. Please try again.');
-			setIsSigningOut(false);
-		}
-	};
+  const [dashboardResult, devicesResult, boundsResult] = await Promise.all([
+    fetchDashboard(supabase),
+    fetchDevices(supabase),
+    fetchTimeBounds(supabase)
+  ]);
 
-	return (
-		<Box
-			as="main"
-			sx={{
-				bg: 'muted',
-				color: 'text',
-				p: 4,
-				borderRadius: 8,
-				maxWidth: 640,
-				width: '100%'
-			}}
-		>
-			<Text as="h1" sx={{ mb: 2, fontSize: 4 }}>
-				Admin
-			</Text>
-			<Text as="p" sx={{ mb: 3 }}>
-				Authenticated admin content goes here.
-			</Text>
-			<Flex sx={{ alignItems: 'center', gap: 3, flexWrap: 'wrap' }}>
-				<Button onClick={handleSignOut} disabled={isSigningOut}>
-					{isSigningOut ? 'Signing out...' : 'Log out'}
-				</Button>
-				{errorMessage && (
-					<Text as="p" sx={{ color: 'error' }}>
-						{errorMessage}
-					</Text>
-				)}
-			</Flex>
-		</Box>
-	);
+  const initialData = {
+    summary: dashboardResult.summary ?? EMPTY_SUMMARY,
+    timeline: dashboardResult.timeline ?? [],
+    recent: dashboardResult.recent ?? [],
+    devices: devicesResult.devices ?? [],
+    bounds: boundsResult.bounds ?? { from: null, to: null }
+  };
+
+  return <AdminDashboard initialData={initialData} />;
 }
