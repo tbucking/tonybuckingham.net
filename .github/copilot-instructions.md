@@ -6,6 +6,7 @@
 - **React 19** with Server Components by default; add `'use client'` only to components that need state, effects, or browser APIs.
 - **TypeScript**, `strict: true`, no `any`. Components are `.tsx`; modules without JSX are `.ts`.
 - **Tailwind CSS v4** via `postcss.config.mjs`. There is no `tailwind.config.js`; do not create one.
+- **Preset:** shadcn `luma` (`b2D1G8n9k`) — green primary, stone base, `0.875rem` radius, Inter. Re-apply with `npx shadcn@latest init -p b2D1G8n9k -f --reinstall`; this overwrites `src/components/ui` and the tokens.
 - **shadcn/ui** components are vendored into `src/components/ui` and are project code.
 - **Supabase** for auth and data (`@supabase/ssr`, `@supabase/supabase-js`).
 - **Recharts** for charts, **lucide-react** for icons, **next-themes** for color mode.
