@@ -1,5 +1,9 @@
 'use client';
 
+// shadcn's chart primitives are Recharts wrappers (the registry item declares
+// recharts as a dependency), so composing a chart means importing the Recharts
+// building blocks here. Keeping every Recharts import in this one component
+// means a future charting change has a single seam to touch.
 import {
   CartesianGrid,
   Line,
@@ -94,19 +98,30 @@ export default function ActivityTimelineChart({ timeline }: ActivityTimelineChar
               tickLine={false}
               axisLine={false}
               minTickGap={32}
-              fontSize={11}
+              // shadcn's container targets `.recharts-cartesian-axis-tick_text`,
+              // which this Recharts version does not emit, so bind the tick
+              // colour to the theme token explicitly.
+              tick={{ className: 'fill-muted-foreground' }}
             />
             <YAxis
               allowDecimals={false}
               tickLine={false}
               axisLine={false}
               width={40}
-              fontSize={11}
+              tick={{ className: 'fill-muted-foreground' }}
             />
             <ChartTooltip
               content={
                 <ChartTooltipContent
-                  labelFormatter={(value) => new Date(Number(value)).toLocaleString()}
+                  // ChartTooltipContent passes the series label to
+                  // labelFormatter, not the axis value, so read the original
+                  // timestamp off the row instead.
+                  labelFormatter={(_label, payload) => {
+                    const timestamp = payload?.[0]?.payload?.time;
+                    return typeof timestamp === 'number'
+                      ? new Date(timestamp).toLocaleString()
+                      : '';
+                  }}
                 />
               }
             />
