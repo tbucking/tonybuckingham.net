@@ -31,6 +31,15 @@ npm run dev
 
 The `/admin` path is protected using Next.js `proxy.js` + Supabase SSR session checks. Unauthenticated requests to `/admin` are redirected to `/login`.
 
+## Database Migrations
+
+This site shares its hosted Supabase project (ref `jdewkdjgbghtvzwsmpuw`) with the **internetbutton** project.
+
+- **Migration ownership**: the internetbutton repository owns all migrations for the shared database. It is the single source of truth for schema changes, and all migrations (including this site's admin read policy) live there.
+- This repository contains no `supabase/migrations/` directory.
+- Do **not** run `supabase db push` or `supabase db reset` against the hosted project from this repository.
+- To inspect the remote database read-only, use `supabase db query --linked`.
+
 ## Getting Started
 
 First, run the development server:
