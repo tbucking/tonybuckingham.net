@@ -10,7 +10,6 @@ import {
   CardTitle
 } from '@/components/ui/card';
 import { Field, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
 import {
   Select,
   SelectContent,
@@ -19,6 +18,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import type { ActivityFilters as Filters } from '@/lib/activity-queries';
+import DateTimeField from './date-time-field';
 
 const EMPTY_FILTERS: Filters = { deviceId: '', from: '', to: '' };
 
@@ -88,27 +88,21 @@ export default function ActivityFilters({ devices, value, onChange }: ActivityFi
             </Select>
           </Field>
 
-          <Field className="w-full sm:w-[220px]">
-            <FieldLabel htmlFor="from-filter">From</FieldLabel>
-            <Input
-              id="from-filter"
-              type="datetime-local"
-              value={from}
-              onChange={(event) => setFrom(event.target.value)}
-              className="cursor-pointer"
-            />
-          </Field>
+          <DateTimeField
+            id="from-filter"
+            label="From"
+            value={from}
+            onChange={setFrom}
+            defaultTime="00:00"
+          />
 
-          <Field className="w-full sm:w-[220px]">
-            <FieldLabel htmlFor="to-filter">To</FieldLabel>
-            <Input
-              id="to-filter"
-              type="datetime-local"
-              value={to}
-              onChange={(event) => setTo(event.target.value)}
-              className="cursor-pointer"
-            />
-          </Field>
+          <DateTimeField
+            id="to-filter"
+            label="To"
+            value={to}
+            onChange={setTo}
+            defaultTime="23:59"
+          />
 
           <div className="flex gap-2">
             <Button onClick={handleApply}>Apply</Button>
