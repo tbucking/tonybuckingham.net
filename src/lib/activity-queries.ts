@@ -74,7 +74,10 @@ const COLUMNS =
 
 // Fetches the raw rows within the current filter window. Aggregation is done in
 // JavaScript because PostgREST's REST DSL does not support GROUP BY or DISTINCT.
-// The cap keeps the dashboard bounded; raise it if the dataset grows.
+// The cap keeps the dashboard bounded. Rows are ordered newest-first so the cap
+// drops the oldest data; ordering ascending would return the *oldest* MAX_ROWS
+// and silently pin the dashboard to a stale timestamp once the window grew past
+// the cap. Callers re-sort as needed.
 export async function fetchRows(
   supabase: ActivityClient,
   filters: ActivityFilters = {}
@@ -91,7 +94,7 @@ export async function fetchRows(
     query = query.lte('bucket_start', filters.to);
   }
 
-  query = query.order('bucket_start', { ascending: true }).limit(MAX_ROWS);
+  query = query.order('bucket_start', { ascending: false }).limit(MAX_ROWS);
 
   const { data, error } = await query;
   return { rows: (data as ActivityRow[] | null) ?? [], error };
