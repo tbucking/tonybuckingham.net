@@ -1,9 +1,15 @@
-import { createServerClient } from '@supabase/ssr';
+import { createServerClient, type CookieOptions } from '@supabase/ssr';
 import { NextResponse, type NextRequest } from 'next/server';
 import { getSupabaseEnv } from './env';
 
 const ADMIN_PATH = '/admin';
 const LOGIN_PATH = '/login';
+
+interface PendingCookie {
+  name: string;
+  value: string;
+  options?: CookieOptions;
+}
 
 export async function updateSession(request: NextRequest) {
   const env = getSupabaseEnv();
@@ -12,6 +18,17 @@ export async function updateSession(request: NextRequest) {
   }
 
   let response = NextResponse.next({ request });
+  // Refreshed auth cookies must be attached to every response that leaves the
+  // proxy, including redirects. Dropping them leaves the browser on a stale
+  // token, so /admin and /login keep sending the request back and forth.
+  let pendingCookies: PendingCookie[] = [];
+
+  const withCookies = (target: NextResponse) => {
+    pendingCookies.forEach(({ name, value, options }) => {
+      target.cookies.set(name, value, options);
+    });
+    return target;
+  };
 
   const supabase = createServerClient(env.url, env.key, {
     cookies: {
@@ -19,6 +36,8 @@ export async function updateSession(request: NextRequest) {
         return request.cookies.getAll();
       },
       setAll(cookiesToSet) {
+        pendingCookies = cookiesToSet;
+
         cookiesToSet.forEach(({ name, value }) => {
           request.cookies.set(name, value);
         });
@@ -46,19 +65,23 @@ export async function updateSession(request: NextRequest) {
   const pathname = request.nextUrl.pathname;
   const isAdminRoute = pathname.startsWith(ADMIN_PATH);
   const isLoginRoute = pathname === LOGIN_PATH;
+  const isAuthenticated = Boolean(claims) && !error;
 
-  if (isAdminRoute && (!claims || error)) {
+  if (isAdminRoute && !isAuthenticated) {
     const loginUrl = request.nextUrl.clone();
     loginUrl.pathname = LOGIN_PATH;
     loginUrl.searchParams.set('next', pathname);
-    return NextResponse.redirect(loginUrl);
+    return withCookies(NextResponse.redirect(loginUrl));
   }
 
-  if (isLoginRoute && claims) {
+  // Only bounce away from /login when the server is sure the session is good,
+  // so a token that the browser holds but the server rejects cannot ping-pong
+  // between /login and /admin.
+  if (isLoginRoute && isAuthenticated) {
     const adminUrl = request.nextUrl.clone();
     adminUrl.pathname = ADMIN_PATH;
     adminUrl.search = '';
-    return NextResponse.redirect(adminUrl);
+    return withCookies(NextResponse.redirect(adminUrl));
   }
 
   return response;

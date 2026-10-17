@@ -85,13 +85,11 @@ export function Auth({ children, redirectTo = null }: AuthProps) {
     };
   }, [isSupabaseConfigured, supabase]);
 
-  useEffect(() => {
-    if (!session || !redirectTo) {
-      return;
-    }
-
-    router.replace(redirectTo);
-  }, [redirectTo, router, session]);
+  // Navigating away as soon as the client sees a session used to loop: if the
+  // server rejected that session, /admin sent the browser back to /login and
+  // this effect immediately sent it to /admin again. The proxy already
+  // redirects signed-in visitors away from /login, so only navigate after a
+  // sign-in this component actually performed.
 
   const resetMessages = () => {
     setStatusMessage('');
@@ -118,6 +116,10 @@ export function Auth({ children, redirectTo = null }: AuthProps) {
 
     setStatusMessage('Signed in successfully.');
     setIsLoading(false);
+
+    if (redirectTo) {
+      router.replace(redirectTo);
+    }
   };
 
   const handleSignOut = async () => {
