@@ -15,6 +15,7 @@ import {
   type TimeBounds,
   toQueryFilters
 } from '@/lib/activity-queries';
+import { defaultDateRange } from '@/lib/datetime';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import ActivityFilters from './activity-filters';
@@ -48,6 +49,11 @@ export default function AdminDashboard({
 
   const [filters, setFilters] = useState<Filters>(initialFilters);
   const filtersRef = useRef<Filters>(initialFilters);
+  // The initial window is "the last 24 hours relative to now", so it has to be
+  // recomputed on every refresh. Reusing the value captured when the page was
+  // rendered would hide anything written since then, because the query applies
+  // `bucket_start <= to`. Applying a filter opts out of the rolling window.
+  const isRollingWindowRef = useRef(true);
 
   const [data, setData] = useState<DashboardData>({
     summary: initialData.summary,
@@ -64,11 +70,22 @@ export default function AdminDashboard({
   const [errorMessage, setErrorMessage] = useState('');
 
   const refresh = useCallback(
-    async (nextFilters: Filters = filtersRef.current) => {
+    async (nextFilters?: Filters) => {
       setIsRefreshing(true);
       setErrorMessage('');
 
-      const queryFilters = toQueryFilters(nextFilters);
+      const base = nextFilters ?? filtersRef.current;
+      const effective = isRollingWindowRef.current
+        ? { ...base, ...defaultDateRange() }
+        : base;
+
+      if (isRollingWindowRef.current) {
+        // Keep the pickers showing the window that is actually being queried.
+        filtersRef.current = effective;
+        setFilters(effective);
+      }
+
+      const queryFilters = toQueryFilters(effective);
       const [dashboardResult, devicesResult, boundsResult] = await Promise.all([
         fetchDashboard(supabase, queryFilters),
         fetchDevices(supabase),
@@ -101,6 +118,8 @@ export default function AdminDashboard({
   );
 
   const handleFiltersChange = (nextFilters: Filters) => {
+    // An explicit range is fixed; stop rolling the default window.
+    isRollingWindowRef.current = false;
     filtersRef.current = nextFilters;
     setFilters(nextFilters);
     refresh(nextFilters);
@@ -137,6 +156,24 @@ export default function AdminDashboard({
       supabase.removeChannel(channel);
     };
   }, [supabase, refresh]);
+
+  useEffect(() => {
+    // Realtime is best-effort: the channel can be unavailable or delayed (and
+    // shows as "Offline" without stopping the clock). While the window is
+    // rolling, poll so the visible range keeps advancing.
+    const POLL_INTERVAL_MS = 60_000;
+
+    const interval = setInterval(() => {
+      if (!isRollingWindowRef.current) return;
+      if (typeof document !== 'undefined' && document.visibilityState !== 'visible') {
+        return;
+      }
+
+      refresh();
+    }, POLL_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+  }, [refresh]);
 
   return (
     <main className="mx-auto flex w-full max-w-[1080px] flex-col gap-6 p-4 md:p-8">

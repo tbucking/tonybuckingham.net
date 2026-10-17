@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -35,6 +35,21 @@ export default function ActivityFilters({ devices, value, onChange }: ActivityFi
   const [deviceId, setDeviceId] = useState(value.deviceId ?? '');
   const [from, setFrom] = useState(value.from ?? '');
   const [to, setTo] = useState(value.to ?? '');
+
+  // The dashboard rolls the default window forward, so mirror prop changes
+  // instead of only seeding local state on mount. These setters are no-ops
+  // when the values already match, so the round trip through onChange settles.
+  useEffect(() => {
+    setDeviceId(value.deviceId ?? '');
+  }, [value.deviceId]);
+
+  useEffect(() => {
+    setFrom(value.from ?? '');
+  }, [value.from]);
+
+  useEffect(() => {
+    setTo(value.to ?? '');
+  }, [value.to]);
 
   const handleDeviceChange = (next: string) => {
     const nextDevice = next === ALL_DEVICES ? '' : next;
