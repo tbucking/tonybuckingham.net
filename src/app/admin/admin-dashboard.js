@@ -10,6 +10,7 @@ import {
 } from '@/lib/activity-queries';
 import ActivityFilters from './activity-filters';
 import ActivityTimelineChart from './activity-timeline-chart';
+import ColorModeToggle from './color-mode-toggle';
 import RecentActivityTable from './recent-activity-table';
 import SignOutButton from './sign-out-button';
 import SummaryCards from './summary-cards';
@@ -152,7 +153,10 @@ export default function AdminDashboard({ initialData }) {
                 : 'Initial data'}
           </Text>
         </Box>
-        <SignOutButton />
+        <Flex sx={{ gap: 3, alignItems: 'center' }}>
+          <ColorModeToggle />
+          <SignOutButton />
+        </Flex>
       </Flex>
 
       <ActivityFilters devices={devices} value={filters} onChange={handleFiltersChange} />

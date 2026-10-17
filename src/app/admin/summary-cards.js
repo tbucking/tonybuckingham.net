@@ -4,11 +4,29 @@ import { Box, Grid, Text } from 'theme-ui';
 
 function StatCard({ label, value }) {
   return (
-    <Box sx={{ bg: 'muted', p: 3, borderRadius: 8 }}>
-      <Text as="p" sx={{ fontSize: 1, mb: 1 }}>
+    <Box
+      sx={{
+        bg: 'muted',
+        p: 3,
+        borderRadius: 8,
+        border: '1px solid',
+        borderColor: 'border',
+        boxShadow: 'card'
+      }}
+    >
+      <Text
+        as="p"
+        sx={{
+          fontSize: 0,
+          color: 'gray',
+          mb: 1,
+          textTransform: 'uppercase',
+          letterSpacing: '0.04em'
+        }}
+      >
         {label}
       </Text>
-      <Text as="p" sx={{ fontSize: 4, fontWeight: 'bold' }}>
+      <Text as="p" sx={{ fontSize: 4, fontWeight: 'bold', color: 'text' }}>
         {value.toLocaleString()}
       </Text>
     </Box>

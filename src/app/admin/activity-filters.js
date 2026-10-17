@@ -64,10 +64,7 @@ export default function ActivityFilters({ devices, value, onChange }) {
       </Box>
 
       <Button onClick={handleApply}>Apply</Button>
-      <Button
-        onClick={handleClear}
-        sx={{ bg: 'muted', color: 'text' }}
-      >
+      <Button variant="secondary" onClick={handleClear}>
         Clear
       </Button>
     </Flex>
