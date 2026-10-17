@@ -48,6 +48,7 @@ export default function ActivityFilters({ devices, value, onChange }) {
           type="datetime-local"
           value={from}
           onChange={(event) => setFrom(event.target.value)}
+          sx={{ cursor: 'pointer' }}
         />
       </Box>
 
@@ -58,6 +59,7 @@ export default function ActivityFilters({ devices, value, onChange }) {
           type="datetime-local"
           value={to}
           onChange={(event) => setTo(event.target.value)}
+          sx={{ cursor: 'pointer' }}
         />
       </Box>
 
