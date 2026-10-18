@@ -18,7 +18,7 @@ import {
   SelectValue
 } from '@/components/ui/select';
 import type { ActivityFilters as Filters } from '@/lib/activity-queries';
-import DateTimeField from './date-time-field';
+import DateTimeField from './DateTimeField';
 
 const EMPTY_FILTERS: Filters = { deviceId: '', from: '', to: '' };
 

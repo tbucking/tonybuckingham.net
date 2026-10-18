@@ -1,4 +1,4 @@
-import { Auth } from '../auth';
+import { Auth } from '../../auth';
 
 interface LoginClientProps {
   redirectTo: string;

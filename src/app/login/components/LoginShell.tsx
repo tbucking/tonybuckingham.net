@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import LoginClient from './login-client';
+import LoginClient from './LoginClient';
 
 interface LoginShellProps {
   redirectTo: string;

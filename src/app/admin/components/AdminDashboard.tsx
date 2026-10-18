@@ -18,12 +18,12 @@ import {
 import { defaultDateRange } from '@/lib/datetime';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
-import ActivityFilters from './activity-filters';
-import ActivityTimelineChart from './activity-timeline-chart';
-import ColorModeToggle from './color-mode-toggle';
-import RecentActivityTable from './recent-activity-table';
-import SignOutButton from './sign-out-button';
-import SummaryCards from './summary-cards';
+import ActivityFilters from './ActivityFilters';
+import ActivityTimelineChart from './ActivityTimelineChart';
+import ColorModeToggle from './ColorModeToggle';
+import RecentActivityTable from './RecentActivityTable';
+import SignOutButton from './SignOutButton';
+import SummaryCards from './SummaryCards';
 
 const EMPTY_FILTERS: Filters = { deviceId: '', from: '', to: '' };
 

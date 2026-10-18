@@ -9,7 +9,7 @@ import {
   type DashboardSummary
 } from '@/lib/activity-queries';
 import { defaultDateRange } from '@/lib/datetime';
-import AdminDashboard, { type AdminInitialData } from './admin-dashboard';
+import AdminDashboard, { type AdminInitialData } from './components/AdminDashboard';
 
 // Always fetch fresh data for this authenticated admin page.
 export const dynamic = 'force-dynamic';

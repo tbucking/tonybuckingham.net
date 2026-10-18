@@ -1,4 +1,4 @@
-import LoginShell from './login-shell';
+import LoginShell from './components/LoginShell';
 
 interface LoginPageProps {
   searchParams: Promise<{ next?: string | string[] }>;

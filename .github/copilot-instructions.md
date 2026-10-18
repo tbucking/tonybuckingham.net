@@ -45,6 +45,11 @@
 - Style with Tailwind utility classes; do not reintroduce Theme UI, Emotion, or an `sx` prop
 - Use `next/image` for image assets and always provide `alt`
 
+## File Structure
+- A route folder (`src/app/admin`, `src/app/login`, …) contains only Next.js route files at its root; `page.tsx` is the only root file in these folders
+- Colocate every other route component in a sibling folder named for its role, currently `components/`
+- Name component files after the component they export in PascalCase, e.g. `SummaryCards.tsx` for `export default function SummaryCards`
+
 ## Dark Mode
 - The `dark` class is applied to `<html>` by `next-themes`
 - Color mode is manual-only (`enableSystem` is off); do not add OS-scheme following without an explicit request
